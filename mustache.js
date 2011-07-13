@@ -128,8 +128,10 @@ var Mustache = function() {
         return html;
       }
       var that = this;
-      var regex = new RegExp(this.otag + "\\_i" + this.ctag +
-        "\\s*([\\s\\S]+?)" + this.otag + "\\/i" + this.ctag, "mg");
+      var regex = this.getCachedRegex("render_i18n", function(otag, ctag) {
+        return new RegExp(otag + "\\_i" + ctag +
+        "\\s*([\\s\\S]+?)" + otag + "\\/i" + ctag, "mg");
+      });
 
       // for each {{_i}}{{/i}} section do...
       return html.replace(regex, function(match, content) {
