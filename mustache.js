@@ -107,7 +107,7 @@ var Mustache = function() {
     render_partial: function(name, context, partials) {
       name = this.trim(name);
       // Look for partials in the partials hash, then fall back to asking TD
-      var partial = (partials ? partials[name] : false) || Mustache.getPartial(name);
+      var partial = (partials ? partials[name] : false) || Mustache.get_partial(name);
       if(!partial) {
         throw({message: "unknown_partial '" + name + "'"});
       }
