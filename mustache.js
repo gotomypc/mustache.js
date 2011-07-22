@@ -400,6 +400,6 @@ var Mustache = function() {
     */
     get_partial: function(name) {
       return undefined;
-    },
+    }
   });
 }();
