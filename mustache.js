@@ -7,6 +7,9 @@
 var Mustache = function() {
   var regexCache = {};
   var Renderer = function() {};
+  var getPartial = function() {
+      return undefined;
+  }
 
   Renderer.prototype = {
     otag: "{{",
@@ -106,13 +109,15 @@ var Mustache = function() {
     */
     render_partial: function(name, context, partials) {
       name = this.trim(name);
-      if(!partials || partials[name] === undefined) {
+      // Look for partials in the partials hash, then fall back to asking TD
+      var partial = (partials ? partials[name] : false) || getPartial(name);
+      if(!partial) {
         throw({message: "unknown_partial '" + name + "'"});
       }
       if(typeof(context[name]) != "object") {
-        return this.render(partials[name], context, partials, true);
+        return this.render(partial, context, partials, true);
       }
-      return this.render(partials[name], context[name], partials, true);
+      return this.render(partial, context[name], partials, true);
     },
 
     /*
