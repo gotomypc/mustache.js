@@ -66,7 +66,7 @@ var Mustache = function() {
       Sends parsed lines
     */
     send: function(line) {
-      if(line != "") {
+      if(line !== "") {
         this.buffer.push(line);
       }
     },
@@ -91,7 +91,7 @@ var Mustache = function() {
 
       var that = this;
       var regex = this.getCachedRegex("render_pragmas", function(otag, ctag) {
-        return new RegExp(otag + "%([\\w-]+) ?([\\w]+=[\\w]+)?" + ctag);
+        return new RegExp(otag + "%([\\w-]+) ?([\\w]+=[\\w]+)?" + ctag, "g");
       });
 
       return template.replace(regex, function(match, pragma, options) {
@@ -419,7 +419,7 @@ var Mustache = function() {
 
   return({
     name: "mustache.js",
-    version: "0.3.1-dev-twitter-i18n",
+    version: "0.3.1-dev-twitter-b-i18n",
 
     /*
       Turns a template and view into HTML
