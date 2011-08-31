@@ -115,13 +115,21 @@ var Mustache = function() {
     */
     render_partial: function(name, context, partials) {
       name = this.trim(name);
-      if(!partials || partials[name] === undefined) {
+      var partial = partials;
+      var path = name.split('/');
+      // path.length will rarely be > 1, so don't bother caching it
+      for (var i = 0; i < path.length; i++) {
+        var segment = path[i];
+        if (typeof context[segment] == "object") {
+          context = context[segment];
+        }
+        partial = partial && partial[segment];
+      }
+
+      if(!partial) {
         throw({message: "unknown_partial '" + name + "'"});
       }
-      if(typeof(context[name]) != "object") {
-        return this.render(partials[name], context, partials, true);
-      }
-      return this.render(partials[name], context[name], partials, true);
+      return this.render(partial, context, partials, true);
     },
 
     render_i18n: function(html, context, partials) {
@@ -244,7 +252,7 @@ var Mustache = function() {
 
       var new_regex = function() {
         return that.getCachedRegex("render_tags", function(otag, ctag) {
-          return new RegExp(otag + "(=|!|>|\\{|%)?([^\\/#\\^]+?)\\1?" + ctag + "+", "g");
+          return new RegExp(otag + "(=|!|>|\\{|%)?([^\\/#\\^][^#\\^]*?)\\1?" + ctag + "+", "g");
         });
       };
 
@@ -419,7 +427,7 @@ var Mustache = function() {
 
   return({
     name: "mustache.js",
-    version: "0.3.1-dev-twitter-b-i18n",
+    version: "0.3.1-dev-twitter-c-i18n",
 
     /*
       Turns a template and view into HTML
