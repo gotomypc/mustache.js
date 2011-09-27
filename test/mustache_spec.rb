@@ -74,6 +74,49 @@ describe "mustache" do
       run_js(@run_js, js).should == "\n"
     end
 
+    context "with slashes in partials" do
+      it "should use a slash in a partial to reference a sub-partial" do
+        js = <<-JS
+          #{@boilerplate}
+          var partials = {
+            foo: {
+              bar: "Hello"
+            }
+          };
+          try {
+            print(Mustache.to_html("{{>foo/bar}}", {}, partials));
+          } catch(e) {
+            print('ERROR: ' + e.message);
+          }
+        JS
+        run_js(@run_js, js).should == "Hello\n"
+      end
+
+      it "should reference subcontexts in subpartials" do
+        js = <<-JS
+          #{@boilerplate}
+          var partials = {
+            foo: {
+              bar: "Hello {{jank}} friend"
+            }
+          };
+          var contexts = {
+            foo: {
+              bar: {
+                jank :'good'
+              }
+            }
+          }
+          try {
+            print(Mustache.to_html("{{>foo/bar}}", contexts, partials));
+          } catch(e) {
+            print('ERROR: ' + e.message);
+          }
+        JS
+        run_js(@run_js, js).should == "Hello good friend\n"
+      end
+    end
+
     non_partials.each do |testname|
       describe testname do
         it "should generate the correct html" do
