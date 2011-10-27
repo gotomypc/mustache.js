@@ -155,7 +155,7 @@ var Mustache = function() {
           };
         }
 
-        return TD.i(params);
+        return TD.i(params, null, true);
       });
     },
 
